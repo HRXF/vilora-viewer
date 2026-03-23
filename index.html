@@ -32,7 +32,6 @@
             min-height: 100vh;
         }
 
-        /* Ambient glow */
         .glow-tl, .glow-br {
             position: fixed;
             pointer-events: none;
@@ -60,7 +59,6 @@
             z-index: 1;
         }
 
-        /* ── Header ── */
         header {
             text-align: center;
             margin-bottom: 36px;
@@ -81,7 +79,6 @@
             margin-top: 4px;
         }
 
-        /* ── Status pill ── */
         .status {
             display: flex;
             align-items: center;
@@ -123,7 +120,6 @@
             border-radius: 5px;
         }
 
-        /* ── Gallery ── */
         .gallery {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -181,7 +177,6 @@
             background: rgba(124,91,245,0.08);
         }
 
-        /* ── Empty ── */
         .empty {
             text-align: center;
             padding: 90px 20px;
@@ -191,7 +186,6 @@
         .empty h2 { font-size: 1.2rem; font-weight: 500; color: var(--text); margin-bottom: 6px; }
         .empty p { font-weight: 300; font-size: .9rem; }
 
-        /* ── Lightbox ── */
         .lb {
             display: none;
             position: fixed;
@@ -211,7 +205,6 @@
             box-shadow: 0 0 50px rgba(0,0,0,.6);
         }
 
-        /* ── Responsive ── */
         @media (max-width: 680px) {
             .gallery { grid-template-columns: 1fr; }
             .status { flex-wrap: wrap; gap: 10px; padding: 10px 16px; }
@@ -235,7 +228,7 @@
                 <span id="statusLabel">Connecting</span>
             </div>
             <div class="status-item">
-                Session <span class="mono badge" id="sid">—</span>
+                Session <span class="mono badge" id="sid">driveshot</span>
             </div>
             <div class="status-item">
                 <span class="mono" id="count">0</span>&nbsp;photos
@@ -258,19 +251,16 @@
     <script>
         const CLOUD = 'dxuxbkv7e';
         const POLL  = 3000;
+        const SESSION = 'driveshot';
 
-        const known = new Set();
-        let session = null;
-
-        function getSession() {
-            const p = new URLSearchParams(location.search);
-            return p.get('session') || p.get('s') || location.pathname.replace(/^\/+|\/+$/g, '') || null;
-        }
+        // We'll try multiple manifest URL patterns since Cloudinary
+        // may version the raw file differently on overwrites
+        let manifestUrl = null;
+        let lastCount = 0;
+        let renderedTimestamps = new Set();
 
         function init() {
-            session = getSession();
-            if (!session) { session = 'driveshot'; }
-            document.getElementById('sid').textContent = session;
+            document.getElementById('sid').textContent = SESSION;
             document.getElementById('empty').style.display = 'block';
             poll();
             setInterval(poll, POLL);
@@ -283,8 +273,10 @@
             label.textContent = 'Checking…';
 
             try {
-                // Cloudinary tag-based listing
-                const url = `https://res.cloudinary.com/${CLOUD}/image/list/session-${session}.json`;
+                // Fetch the manifest JSON from Cloudinary
+                // The manifest is uploaded as a raw file at a known path
+                const url = `https://res.cloudinary.com/${CLOUD}/raw/upload/vilora/${SESSION}-manifest.json?_t=${Date.now()}`;
+                
                 const r = await fetch(url, { cache: 'no-store' });
 
                 if (!r.ok) {
@@ -294,24 +286,22 @@
                 }
 
                 const data = await r.json();
-                const resources = data.resources || [];
+                const screenshots = data.screenshots || [];
 
-                // Sort newest first by public_id (which contains timestamp)
-                resources.sort((a, b) => {
-                    const tA = parseInt(a.public_id.split('/').pop()) || 0;
-                    const tB = parseInt(b.public_id.split('/').pop()) || 0;
-                    return tB - tA;
-                });
+                // Sort newest first
+                screenshots.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp));
 
-                resources.forEach((res, i) => {
-                    if (!known.has(res.public_id)) {
-                        known.add(res.public_id);
-                        addCard(res, i);
+                // Render new ones
+                screenshots.forEach((shot, i) => {
+                    if (!renderedTimestamps.has(shot.timestamp)) {
+                        renderedTimestamps.add(shot.timestamp);
+                        addCard(shot, i);
                     }
                 });
 
-                document.getElementById('count').textContent = resources.length;
-                document.getElementById('empty').style.display = resources.length ? 'none' : 'block';
+                document.getElementById('count').textContent = screenshots.length;
+                document.getElementById('empty').style.display = screenshots.length ? 'none' : 'block';
+                lastCount = screenshots.length;
 
             } catch (e) {
                 console.log('Poll error:', e);
@@ -321,27 +311,25 @@
             label.textContent = 'Watching';
         }
 
-        function addCard(res, idx) {
+        function addCard(shot, idx) {
             const gallery = document.getElementById('gallery');
-            const v   = res.version;
-            const pid = res.public_id;
-            const fmt = res.format || 'png';
-            const full  = `https://res.cloudinary.com/${CLOUD}/image/upload/v${v}/${pid}.${fmt}`;
-            const thumb = `https://res.cloudinary.com/${CLOUD}/image/upload/c_fit,w_640,q_auto/v${v}/${pid}.${fmt}`;
+            const fullUrl = shot.url;
+            // Create a thumbnail version using Cloudinary transforms
+            const thumbUrl = fullUrl.replace('/upload/', '/upload/c_fit,w_640,q_auto/');
 
-            const ts = parseInt(pid.split('/').pop()) || 0;
+            const ts = parseInt(shot.timestamp) || 0;
             const time = ts ? new Date(ts * 1000).toLocaleString() : '';
 
             const card = document.createElement('div');
             card.className = 'card';
-            card.style.animationDelay = `${idx * 0.06}s`;
+            card.style.animationDelay = `${Math.min(idx, 5) * 0.06}s`;
             card.innerHTML = `
-                <img src="${thumb}" alt="Screenshot" loading="lazy" onclick="openLb('${full}')">
+                <img src="${thumbUrl}" alt="Screenshot" loading="lazy" onclick="openLb('${fullUrl}')">
                 <div class="card-footer">
                     <span class="card-time">${time}</span>
                     <div class="card-actions">
-                        <button class="btn-sm" onclick="openLb('${full}')">View</button>
-                        <button class="btn-sm" onclick="window.open('${full}','_blank')">Open</button>
+                        <button class="btn-sm" onclick="openLb('${fullUrl}')">View</button>
+                        <button class="btn-sm" onclick="window.open('${fullUrl}','_blank')">Open</button>
                     </div>
                 </div>`;
 
