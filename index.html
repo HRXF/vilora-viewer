@@ -10,7 +10,6 @@
         :root {
             --bg: #08080d;
             --surface: #101018;
-            --surface2: #16161f;
             --border: #1c1c2e;
             --border-hover: #7c5bf5;
             --text: #e4e4ec;
@@ -22,103 +21,54 @@
             --orange: #fb923c;
             --radius: 12px;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             background: var(--bg);
             color: var(--text);
             font-family: 'Outfit', sans-serif;
             min-height: 100vh;
         }
-
         .glow-tl, .glow-br {
-            position: fixed;
-            pointer-events: none;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.5;
-            z-index: 0;
+            position: fixed; pointer-events: none; border-radius: 50%;
+            filter: blur(120px); opacity: .5; z-index: 0;
         }
         .glow-tl {
-            width: 600px; height: 600px;
-            top: -200px; left: -150px;
-            background: radial-gradient(circle, rgba(124,91,245,0.12), transparent 70%);
+            width: 600px; height: 600px; top: -200px; left: -150px;
+            background: radial-gradient(circle, rgba(124,91,245,.12), transparent 70%);
         }
         .glow-br {
-            width: 500px; height: 500px;
-            bottom: -180px; right: -120px;
-            background: radial-gradient(circle, rgba(196,91,255,0.08), transparent 70%);
+            width: 500px; height: 500px; bottom: -180px; right: -120px;
+            background: radial-gradient(circle, rgba(196,91,255,.08), transparent 70%);
         }
-
         .wrap {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 36px 20px 60px;
-            position: relative;
-            z-index: 1;
+            max-width: 1100px; margin: 0 auto;
+            padding: 36px 20px 60px; position: relative; z-index: 1;
         }
-
-        header {
-            text-align: center;
-            margin-bottom: 36px;
-        }
+        header { text-align: center; margin-bottom: 36px; }
         header h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
+            font-size: 1.75rem; font-weight: 700; letter-spacing: -.03em;
             background: linear-gradient(135deg, var(--accent), var(--accent2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        header p {
-            color: var(--text-dim);
-            font-size: 0.88rem;
-            font-weight: 300;
-            margin-top: 4px;
-        }
+        header p { color: var(--text-dim); font-size: .88rem; font-weight: 300; margin-top: 4px; }
 
         .status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 32px;
-            padding: 12px 20px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            max-width: 520px;
-            margin-left: auto;
-            margin-right: auto;
+            display: flex; align-items: center; justify-content: center; gap: 20px;
+            margin: 0 auto 32px; padding: 12px 20px;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 40px; max-width: 520px;
         }
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
+        .status-item { display: flex; align-items: center; gap: 7px; font-size: .8rem; color: var(--text-dim); }
         .dot {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            background: var(--green);
-            box-shadow: 0 0 6px rgba(52,211,153,0.6);
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--green); box-shadow: 0 0 6px rgba(52,211,153,.6);
             animation: blink 2s ease-in-out infinite;
         }
-        .dot.poll { background: var(--orange); box-shadow: 0 0 6px rgba(251,146,60,0.6); }
+        .dot.poll { background: var(--orange); box-shadow: 0 0 6px rgba(251,146,60,.6); }
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
-        .mono {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-        }
-        .badge {
-            background: rgba(124,91,245,0.12);
-            color: var(--accent);
-            padding: 2px 8px;
-            border-radius: 5px;
-        }
+        .mono { font-family: 'JetBrains Mono', monospace; font-size: .78rem; }
+        .badge { background: rgba(124,91,245,.12); color: var(--accent); padding: 2px 8px; border-radius: 5px; }
 
         .gallery {
             display: grid;
@@ -126,10 +76,8 @@
             gap: 16px;
         }
         .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); overflow: hidden;
             transition: border-color .25s, box-shadow .25s, transform .25s;
             animation: slideUp .45s cubic-bezier(.4,0,.2,1) both;
         }
@@ -142,68 +90,32 @@
             from { opacity:0; transform:translateY(16px) scale(.98); }
             to   { opacity:1; transform:translateY(0) scale(1); }
         }
-        .card img {
-            width: 100%;
-            display: block;
-            cursor: pointer;
-        }
+        .card img { width: 100%; display: block; cursor: pointer; }
         .card-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 14px;
-            border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 14px; border-top: 1px solid var(--border);
         }
-        .card-time {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.72rem;
-            color: var(--text-dim);
-        }
+        .card-time { font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--text-dim); }
         .card-actions { display: flex; gap: 6px; }
         .btn-sm {
-            background: none;
-            border: 1px solid var(--border);
-            color: var(--text-dim);
-            padding: 4px 10px;
-            border-radius: 7px;
-            cursor: pointer;
-            font-size: 0.72rem;
-            font-family: 'Outfit', sans-serif;
-            transition: all .2s;
+            background: none; border: 1px solid var(--border); color: var(--text-dim);
+            padding: 4px 10px; border-radius: 7px; cursor: pointer;
+            font-size: .72rem; font-family: 'Outfit', sans-serif; transition: all .2s;
         }
-        .btn-sm:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(124,91,245,0.08);
-        }
+        .btn-sm:hover { border-color: var(--accent); color: var(--accent); background: rgba(124,91,245,.08); }
 
-        .empty {
-            text-align: center;
-            padding: 90px 20px;
-            color: var(--text-dim);
-        }
+        .empty { text-align: center; padding: 90px 20px; color: var(--text-dim); }
         .empty .ico { font-size: 3.4rem; margin-bottom: 16px; opacity: .3; }
         .empty h2 { font-size: 1.2rem; font-weight: 500; color: var(--text); margin-bottom: 6px; }
         .empty p { font-weight: 300; font-size: .9rem; }
 
         .lb {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.92);
-            backdrop-filter: blur(12px);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.92); backdrop-filter: blur(12px);
+            z-index: 200; align-items: center; justify-content: center; cursor: pointer;
         }
         .lb.open { display: flex; }
-        .lb img {
-            max-width: 94vw;
-            max-height: 92vh;
-            border-radius: 6px;
-            box-shadow: 0 0 50px rgba(0,0,0,.6);
-        }
+        .lb img { max-width: 94vw; max-height: 92vh; border-radius: 6px; box-shadow: 0 0 50px rgba(0,0,0,.6); }
 
         @media (max-width: 680px) {
             .gallery { grid-template-columns: 1fr; }
@@ -215,13 +127,11 @@
 <body>
     <div class="glow-tl"></div>
     <div class="glow-br"></div>
-
     <div class="wrap">
         <header>
             <h1>Vilora DriveShot</h1>
             <p>Live Screenshot Viewer</p>
         </header>
-
         <div class="status">
             <div class="status-item">
                 <div class="dot" id="dot"></div>
@@ -234,33 +144,24 @@
                 <span class="mono" id="count">0</span>&nbsp;photos
             </div>
         </div>
-
         <div class="gallery" id="gallery"></div>
-
         <div class="empty" id="empty" style="display:none">
             <div class="ico">📸</div>
             <h2>Waiting for screenshots…</h2>
             <p>Screenshots will appear here within seconds of being taken.</p>
         </div>
     </div>
-
     <div class="lb" id="lb" onclick="closeLb()">
         <img id="lbImg" src="" alt="Full screenshot">
     </div>
 
     <script>
-        const CLOUD = 'dxuxbkv7e';
-        const POLL  = 3000;
-        const SESSION = 'driveshot';
+        const NPOINT_BIN = '218fca7bacc83961de7b';
+        const POLL = 3000;
 
-        // We'll try multiple manifest URL patterns since Cloudinary
-        // may version the raw file differently on overwrites
-        let manifestUrl = null;
-        let lastCount = 0;
-        let renderedTimestamps = new Set();
+        const rendered = new Set();
 
         function init() {
-            document.getElementById('sid').textContent = SESSION;
             document.getElementById('empty').style.display = 'block';
             poll();
             setInterval(poll, POLL);
@@ -273,35 +174,24 @@
             label.textContent = 'Checking…';
 
             try {
-                // Fetch the manifest JSON from Cloudinary
-                // The manifest is uploaded as a raw file at a known path
-                const url = `https://res.cloudinary.com/${CLOUD}/raw/upload/vilora/${SESSION}-manifest.json?_t=${Date.now()}`;
-                
-                const r = await fetch(url, { cache: 'no-store' });
-
-                if (!r.ok) {
-                    dot.classList.remove('poll');
-                    label.textContent = 'Watching';
-                    return;
-                }
+                const r = await fetch(`https://api.npoint.io/${NPOINT_BIN}`, { cache: 'no-store' });
+                if (!r.ok) { throw new Error('fetch failed'); }
 
                 const data = await r.json();
-                const screenshots = data.screenshots || [];
+                const shots = data.screenshots || [];
 
                 // Sort newest first
-                screenshots.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp));
+                shots.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp));
 
-                // Render new ones
-                screenshots.forEach((shot, i) => {
-                    if (!renderedTimestamps.has(shot.timestamp)) {
-                        renderedTimestamps.add(shot.timestamp);
+                shots.forEach((shot, i) => {
+                    if (!rendered.has(shot.timestamp)) {
+                        rendered.add(shot.timestamp);
                         addCard(shot, i);
                     }
                 });
 
-                document.getElementById('count').textContent = screenshots.length;
-                document.getElementById('empty').style.display = screenshots.length ? 'none' : 'block';
-                lastCount = screenshots.length;
+                document.getElementById('count').textContent = shots.length;
+                document.getElementById('empty').style.display = shots.length ? 'none' : 'block';
 
             } catch (e) {
                 console.log('Poll error:', e);
@@ -313,10 +203,8 @@
 
         function addCard(shot, idx) {
             const gallery = document.getElementById('gallery');
-            const fullUrl = shot.url;
-            // Create a thumbnail version using Cloudinary transforms
-            const thumbUrl = fullUrl.replace('/upload/', '/upload/c_fit,w_640,q_auto/');
-
+            const full = shot.url;
+            const thumb = full.replace('/upload/', '/upload/c_fit,w_640,q_auto/');
             const ts = parseInt(shot.timestamp) || 0;
             const time = ts ? new Date(ts * 1000).toLocaleString() : '';
 
@@ -324,15 +212,14 @@
             card.className = 'card';
             card.style.animationDelay = `${Math.min(idx, 5) * 0.06}s`;
             card.innerHTML = `
-                <img src="${thumbUrl}" alt="Screenshot" loading="lazy" onclick="openLb('${fullUrl}')">
+                <img src="${thumb}" alt="Screenshot" loading="lazy" onclick="openLb('${full}')">
                 <div class="card-footer">
                     <span class="card-time">${time}</span>
                     <div class="card-actions">
-                        <button class="btn-sm" onclick="openLb('${fullUrl}')">View</button>
-                        <button class="btn-sm" onclick="window.open('${fullUrl}','_blank')">Open</button>
+                        <button class="btn-sm" onclick="openLb('${full}')">View</button>
+                        <button class="btn-sm" onclick="window.open('${full}','_blank')">Open</button>
                     </div>
                 </div>`;
-
             gallery.insertBefore(card, gallery.firstChild);
         }
 
@@ -340,9 +227,7 @@
             document.getElementById('lbImg').src = url;
             document.getElementById('lb').classList.add('open');
         }
-        function closeLb() {
-            document.getElementById('lb').classList.remove('open');
-        }
+        function closeLb() { document.getElementById('lb').classList.remove('open'); }
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 
         init();
