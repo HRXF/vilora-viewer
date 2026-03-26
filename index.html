@@ -7,413 +7,372 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #08080d;
-            --surface: #101018;
-            --border: #1c1c2e;
-            --border-hover: #7c5bf5;
-            --text: #e4e4ec;
-            --text-dim: #5e5e74;
-            --accent: #7c5bf5;
-            --accent2: #c45bff;
-            --glow: rgba(124, 91, 245, 0.25);
-            --green: #34d399;
-            --orange: #fb923c;
-            --red: #f87171;
-            --radius: 12px;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Outfit', sans-serif;
-            min-height: 100vh;
-        }
-        .glow-tl, .glow-br {
-            position: fixed; pointer-events: none; border-radius: 50%;
-            filter: blur(120px); opacity: .5; z-index: 0;
-        }
-        .glow-tl {
-            width: 600px; height: 600px; top: -200px; left: -150px;
-            background: radial-gradient(circle, rgba(124,91,245,.12), transparent 70%);
-        }
-        .glow-br {
-            width: 500px; height: 500px; bottom: -180px; right: -120px;
-            background: radial-gradient(circle, rgba(196,91,255,.08), transparent 70%);
-        }
-        .wrap {
-            max-width: 1100px; margin: 0 auto;
-            padding: 36px 20px 60px; position: relative; z-index: 1;
-        }
-        header { text-align: center; margin-bottom: 36px; }
-        header h1 {
-            font-size: 1.75rem; font-weight: 700; letter-spacing: -.03em;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        header p { color: var(--text-dim); font-size: .88rem; font-weight: 300; margin-top: 4px; }
+        :root{--bg:#08080d;--surface:#101018;--surface2:#181824;--border:#1c1c2e;--border-hover:#7c5bf5;--text:#e4e4ec;--text-dim:#5e5e74;--accent:#7c5bf5;--accent2:#c45bff;--glow:rgba(124,91,245,.25);--green:#34d399;--orange:#fb923c;--red:#f87171;--radius:12px}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh}
+        .glow-tl,.glow-br{position:fixed;pointer-events:none;border-radius:50%;filter:blur(120px);opacity:.5;z-index:0}
+        .glow-tl{width:600px;height:600px;top:-200px;left:-150px;background:radial-gradient(circle,rgba(124,91,245,.12),transparent 70%)}
+        .glow-br{width:500px;height:500px;bottom:-180px;right:-120px;background:radial-gradient(circle,rgba(196,91,255,.08),transparent 70%)}
+        .wrap{max-width:1100px;margin:0 auto;padding:36px 20px 60px;position:relative;z-index:1}
 
-        .status {
-            display: flex; align-items: center; justify-content: center; gap: 20px;
-            margin: 0 auto 20px; padding: 12px 20px;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 40px; max-width: 600px;
-        }
-        .status-item { display: flex; align-items: center; gap: 7px; font-size: .8rem; color: var(--text-dim); }
-        .dot {
-            width: 7px; height: 7px; border-radius: 50%;
-            background: var(--green); box-shadow: 0 0 6px rgba(52,211,153,.6);
-            animation: blink 2s ease-in-out infinite;
-        }
-        .dot.poll { background: var(--orange); box-shadow: 0 0 6px rgba(251,146,60,.6); }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
-        .mono { font-family: 'JetBrains Mono', monospace; font-size: .78rem; }
-        .badge { background: rgba(124,91,245,.12); color: var(--accent); padding: 2px 8px; border-radius: 5px; }
+        header{text-align:center;margin-bottom:32px}
+        header h1{font-size:1.75rem;font-weight:700;letter-spacing:-.03em;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        header p{color:var(--text-dim);font-size:.88rem;font-weight:300;margin-top:4px}
 
-        .toolbar {
-            display: flex; align-items: center; justify-content: space-between;
-            margin: 0 auto 24px; max-width: 1100px;
-        }
-        .new-count { font-size: .85rem; color: var(--text-dim); }
-        .new-count strong { color: var(--accent); font-weight: 600; }
-        .btn-clear {
-            background: none; border: 1px solid rgba(248,113,113,.3); color: var(--red);
-            padding: 8px 18px; border-radius: 10px; cursor: pointer;
-            font-size: .82rem; font-family: 'Outfit', sans-serif; font-weight: 500; transition: all .2s;
-        }
-        .btn-clear:hover { background: rgba(248,113,113,.1); border-color: var(--red); }
-        .btn-clear:disabled { opacity: .4; cursor: not-allowed; }
+        /* Session picker */
+        .session-bar{display:flex;align-items:center;gap:10px;margin:0 auto 24px;max-width:800px;flex-wrap:wrap;justify-content:center}
+        .session-btn{background:var(--surface);border:1px solid var(--border);color:var(--text-dim);padding:8px 18px;border-radius:20px;cursor:pointer;font-size:.82rem;font-family:'Outfit',sans-serif;font-weight:500;transition:all .2s}
+        .session-btn:hover{border-color:var(--accent);color:var(--text)}
+        .session-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+        .session-btn .count{font-family:'JetBrains Mono',monospace;font-size:.7rem;opacity:.7;margin-left:4px}
 
-        .confirm-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,.7); backdrop-filter: blur(6px);
-            z-index: 300; align-items: center; justify-content: center;
-        }
-        .confirm-overlay.open { display: flex; }
-        .confirm-box {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; padding: 32px; max-width: 380px; text-align: center;
-        }
-        .confirm-box h3 { font-size: 1.1rem; margin-bottom: 8px; }
-        .confirm-box p { font-size: .88rem; color: var(--text-dim); margin-bottom: 24px; font-weight: 300; }
-        .confirm-actions { display: flex; gap: 12px; justify-content: center; }
-        .btn-cancel {
-            background: none; border: 1px solid var(--border); color: var(--text-dim);
-            padding: 10px 24px; border-radius: 10px; cursor: pointer;
-            font-family: 'Outfit', sans-serif; font-size: .85rem; transition: all .2s;
-        }
-        .btn-cancel:hover { border-color: var(--text-dim); color: var(--text); }
-        .btn-danger {
-            background: rgba(248,113,113,.15); border: 1px solid var(--red); color: var(--red);
-            padding: 10px 24px; border-radius: 10px; cursor: pointer;
-            font-family: 'Outfit', sans-serif; font-size: .85rem; font-weight: 500; transition: all .2s;
-        }
-        .btn-danger:hover { background: rgba(248,113,113,.25); }
+        /* Status */
+        .status{display:flex;align-items:center;justify-content:center;gap:20px;margin:0 auto 20px;padding:12px 20px;background:var(--surface);border:1px solid var(--border);border-radius:40px;max-width:520px}
+        .status-item{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--text-dim)}
+        .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px rgba(52,211,153,.6);animation:blink 2s ease-in-out infinite}
+        .dot.poll{background:var(--orange);box-shadow:0 0 6px rgba(251,146,60,.6)}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+        .mono{font-family:'JetBrains Mono',monospace;font-size:.78rem}
+        .badge{background:rgba(124,91,245,.12);color:var(--accent);padding:2px 8px;border-radius:5px}
 
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 16px;
-        }
-        .card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius); overflow: hidden;
-            transition: border-color .25s, box-shadow .25s, transform .25s;
-            position: relative;
-        }
-        .card.fresh {
-            animation: slideUp .45s cubic-bezier(.4,0,.2,1) both;
-        }
-        .card:hover {
-            border-color: var(--border-hover);
-            box-shadow: 0 0 24px var(--glow);
-            transform: translateY(-3px);
-        }
-        @keyframes slideUp {
-            from { opacity:0; transform:translateY(16px) scale(.98); }
-            to   { opacity:1; transform:translateY(0) scale(1); }
-        }
-        .card img { width: 100%; display: block; cursor: pointer; }
-        .card-footer {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 14px; border-top: 1px solid var(--border);
-        }
-        .card-time { font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--text-dim); }
-        .card-actions { display: flex; gap: 6px; }
-        .btn-sm {
-            background: none; border: 1px solid var(--border); color: var(--text-dim);
-            padding: 4px 10px; border-radius: 7px; cursor: pointer;
-            font-size: .72rem; font-family: 'Outfit', sans-serif; transition: all .2s;
-        }
-        .btn-sm:hover { border-color: var(--accent); color: var(--accent); background: rgba(124,91,245,.08); }
+        /* Toolbar */
+        .toolbar{display:flex;align-items:center;justify-content:space-between;margin:0 auto 24px;max-width:1100px}
+        .new-count{font-size:.85rem;color:var(--text-dim)}
+        .new-count strong{color:var(--accent);font-weight:600}
+        .toolbar-actions{display:flex;gap:8px}
+        .btn-clear{background:none;border:1px solid rgba(248,113,113,.3);color:var(--red);padding:8px 18px;border-radius:10px;cursor:pointer;font-size:.82rem;font-family:'Outfit',sans-serif;font-weight:500;transition:all .2s}
+        .btn-clear:hover{background:rgba(248,113,113,.1);border-color:var(--red)}
+        .btn-clear:disabled{opacity:.4;cursor:not-allowed}
 
-        .new-badge {
-            position: absolute; top: 10px; right: 10px;
-            background: var(--accent); color: #fff;
-            font-size: .65rem; font-weight: 700;
-            padding: 3px 8px; border-radius: 6px;
-            letter-spacing: .04em; text-transform: uppercase;
-            box-shadow: 0 2px 10px rgba(124,91,245,.5);
-            animation: badgePulse 2s ease-in-out infinite;
-            z-index: 2;
-        }
-        @keyframes badgePulse {
-            0%,100% { box-shadow: 0 2px 10px rgba(124,91,245,.5); }
-            50% { box-shadow: 0 2px 18px rgba(124,91,245,.8); }
-        }
-        .card.is-new { border-color: var(--accent); }
+        /* Gallery */
+        .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color .25s,box-shadow .25s,transform .25s;position:relative}
+        .card.fresh{animation:slideUp .45s cubic-bezier(.4,0,.2,1) both}
+        .card:hover{border-color:var(--border-hover);box-shadow:0 0 24px var(--glow);transform:translateY(-3px)}
+        @keyframes slideUp{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .card img{width:100%;display:block;cursor:pointer}
+        .card-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-top:1px solid var(--border)}
+        .card-time{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text-dim)}
+        .card-actions{display:flex;gap:6px}
+        .btn-sm{background:none;border:1px solid var(--border);color:var(--text-dim);padding:4px 10px;border-radius:7px;cursor:pointer;font-size:.72rem;font-family:'Outfit',sans-serif;transition:all .2s}
+        .btn-sm:hover{border-color:var(--accent);color:var(--accent);background:rgba(124,91,245,.08)}
+        .new-badge{position:absolute;top:10px;right:10px;background:var(--accent);color:#fff;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 2px 10px rgba(124,91,245,.5);animation:badgePulse 2s ease-in-out infinite;z-index:2}
+        @keyframes badgePulse{0%,100%{box-shadow:0 2px 10px rgba(124,91,245,.5)}50%{box-shadow:0 2px 18px rgba(124,91,245,.8)}}
+        .card.is-new{border-color:var(--accent)}
 
-        .empty { text-align: center; padding: 90px 20px; color: var(--text-dim); }
-        .empty .ico { font-size: 3.4rem; margin-bottom: 16px; opacity: .3; }
-        .empty h2 { font-size: 1.2rem; font-weight: 500; color: var(--text); margin-bottom: 6px; }
-        .empty p { font-weight: 300; font-size: .9rem; }
+        .empty{text-align:center;padding:90px 20px;color:var(--text-dim)}
+        .empty .ico{font-size:3.4rem;margin-bottom:16px;opacity:.3}
+        .empty h2{font-size:1.2rem;font-weight:500;color:var(--text);margin-bottom:6px}
+        .empty p{font-weight:300;font-size:.9rem}
 
-        .lb {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,.92); backdrop-filter: blur(12px);
-            z-index: 200; align-items: center; justify-content: center; cursor: pointer;
-        }
-        .lb.open { display: flex; }
-        .lb img { max-width: 94vw; max-height: 92vh; border-radius: 6px; box-shadow: 0 0 50px rgba(0,0,0,.6); }
+        /* Overlays */
+        .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center}
+        .overlay.open{display:flex}
+        .dialog{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;max-width:380px;text-align:center;width:90%}
+        .dialog h3{font-size:1.1rem;margin-bottom:8px}
+        .dialog p{font-size:.88rem;color:var(--text-dim);margin-bottom:20px;font-weight:300}
+        .dialog input{width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;margin-bottom:16px;outline:none}
+        .dialog input:focus{border-color:var(--accent)}
+        .dialog-actions{display:flex;gap:12px;justify-content:center}
+        .btn-cancel{background:none;border:1px solid var(--border);color:var(--text-dim);padding:10px 24px;border-radius:10px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.85rem;transition:all .2s}
+        .btn-cancel:hover{border-color:var(--text-dim);color:var(--text)}
+        .btn-danger{background:rgba(248,113,113,.15);border:1px solid var(--red);color:var(--red);padding:10px 24px;border-radius:10px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;transition:all .2s}
+        .btn-danger:hover{background:rgba(248,113,113,.25)}
+        .error-msg{color:var(--red);font-size:.8rem;margin-bottom:12px}
 
-        @media (max-width: 680px) {
-            .gallery { grid-template-columns: 1fr; }
-            .status { flex-wrap: wrap; gap: 10px; padding: 10px 16px; }
-            header h1 { font-size: 1.4rem; }
-            .toolbar { flex-direction: column; gap: 12px; align-items: stretch; }
-        }
+        /* Lightbox */
+        .lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);z-index:200;align-items:center;justify-content:center;cursor:pointer}
+        .lb.open{display:flex}
+        .lb img{max-width:94vw;max-height:92vh;border-radius:6px;box-shadow:0 0 50px rgba(0,0,0,.6)}
+
+        @media(max-width:680px){.gallery{grid-template-columns:1fr}.status{flex-wrap:wrap;gap:10px;padding:10px 16px}header h1{font-size:1.4rem}.toolbar{flex-direction:column;gap:12px;align-items:stretch}.session-bar{gap:6px}}
     </style>
 </head>
 <body>
-    <div class="glow-tl"></div>
-    <div class="glow-br"></div>
-    <div class="wrap">
-        <header>
-            <h1>Vilora DriveShot</h1>
-            <p>Live Screenshot Viewer</p>
-        </header>
-        <div class="status">
-            <div class="status-item">
-                <div class="dot" id="dot"></div>
-                <span id="statusLabel">Connecting</span>
-            </div>
-            <div class="status-item">
-                Session <span class="mono badge">driveshot</span>
-            </div>
-            <div class="status-item">
-                <span class="mono" id="count">0</span>&nbsp;photos
-            </div>
-        </div>
+<div class="glow-tl"></div>
+<div class="glow-br"></div>
+<div class="wrap">
+    <header>
+        <h1>Vilora DriveShot</h1>
+        <p>Live Screenshot Viewer</p>
+    </header>
 
-        <div class="toolbar">
-            <div class="new-count" id="newCount"></div>
-            <button class="btn-clear" id="btnClear" onclick="showConfirm()" disabled>Clear Gallery</button>
-        </div>
+    <div class="session-bar" id="sessionBar"></div>
 
-        <div class="gallery" id="gallery"></div>
-        <div class="empty" id="empty" style="display:none">
-            <div class="ico">📸</div>
-            <h2>Waiting for screenshots…</h2>
-            <p>Screenshots will appear here within seconds of being taken.</p>
+    <div class="status">
+        <div class="status-item"><div class="dot" id="dot"></div><span id="statusLabel">Connecting</span></div>
+        <div class="status-item">Session <span class="mono badge" id="sid">—</span></div>
+        <div class="status-item"><span class="mono" id="count">0</span>&nbsp;photos</div>
+    </div>
+
+    <div class="toolbar">
+        <div class="new-count" id="newCount"></div>
+        <div class="toolbar-actions">
+            <button class="btn-clear" id="btnDelete" onclick="showDeleteDialog()" disabled>Delete Session</button>
         </div>
     </div>
 
-    <div class="confirm-overlay" id="confirmOverlay">
-        <div class="confirm-box">
-            <h3>Clear Gallery?</h3>
-            <p>This will remove all screenshots from the viewer. Images are still saved on the cloud.</p>
-            <div class="confirm-actions">
-                <button class="btn-cancel" onclick="hideConfirm()">Cancel</button>
-                <button class="btn-danger" id="btnConfirmClear" onclick="clearGallery()">Clear All</button>
-            </div>
+    <div class="gallery" id="gallery"></div>
+    <div class="empty" id="empty" style="display:none">
+        <div class="ico">📸</div>
+        <h2>Waiting for screenshots…</h2>
+        <p>Screenshots will appear here within seconds of being taken.</p>
+    </div>
+</div>
+
+<!-- Delete confirmation -->
+<div class="overlay" id="deleteOverlay">
+    <div class="dialog">
+        <h3>Delete Session?</h3>
+        <p>This will remove the session and all its screenshots from the viewer. Images remain on the cloud.</p>
+        <div class="error-msg" id="deleteError" style="display:none"></div>
+        <input type="password" id="adminPass" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')deleteSession()">
+        <div class="dialog-actions">
+            <button class="btn-cancel" onclick="hideDeleteDialog()">Cancel</button>
+            <button class="btn-danger" id="btnConfirmDelete" onclick="deleteSession()">Delete</button>
         </div>
     </div>
+</div>
 
-    <div class="lb" id="lb" onclick="closeLb()">
-        <img id="lbImg" src="" alt="Full screenshot">
-    </div>
+<!-- Lightbox -->
+<div class="lb" id="lb" onclick="closeLb()">
+    <img id="lbImg" src="" alt="Full screenshot">
+</div>
 
-    <script>
-        const NPOINT_BIN = '218fca7bacc83961de7b';
-        const POLL = 3000;
+<script>
+const NPOINT_BIN = '218fca7bacc83961de7b';
+const POLL = 3000;
+const ADMIN_PASSWORD = 'vilora2026';
 
-        // Track which timestamps are already rendered in DOM
-        const renderedSet = new Set();
-        // Ordered list of all timestamps (newest first) for stable rendering
-        let allTimestamps = [];
+let remoteData = {};
+let activeSession = null;
+let renderedSet = new Set();
+let seenPhotos = {};
 
-        // Seen tracking per browser
-        let seenPhotos = {};
-        try {
-            const s = localStorage.getItem('vilora-seen');
-            if (s) seenPhotos = JSON.parse(s);
-        } catch(e) {}
-        function saveSeen() {
-            try { localStorage.setItem('vilora-seen', JSON.stringify(seenPhotos)); } catch(e) {}
-        }
+try { const s = localStorage.getItem('vilora-seen'); if (s) seenPhotos = JSON.parse(s); } catch(e) {}
+function saveSeen() { try { localStorage.setItem('vilora-seen', JSON.stringify(seenPhotos)); } catch(e) {} }
 
-        function init() {
-            document.getElementById('empty').style.display = 'block';
-            poll();
-            setInterval(poll, POLL);
-        }
+function init() {
+    document.getElementById('empty').style.display = 'block';
+    poll();
+    setInterval(poll, POLL);
+}
 
-        async function poll() {
-            const dot = document.getElementById('dot');
-            const label = document.getElementById('statusLabel');
-            dot.classList.add('poll');
-            label.textContent = 'Checking…';
+async function poll() {
+    const dot = document.getElementById('dot');
+    const label = document.getElementById('statusLabel');
+    dot.classList.add('poll');
+    label.textContent = 'Checking…';
 
-            try {
-                const r = await fetch(`https://api.npoint.io/${NPOINT_BIN}`, { cache: 'no-store' });
-                if (!r.ok) throw new Error('fetch failed');
+    try {
+        const r = await fetch(`https://api.npoint.io/${NPOINT_BIN}`, { cache: 'no-store' });
+        if (!r.ok) throw new Error('fetch failed');
+        remoteData = await r.json();
 
-                const data = await r.json();
-                const shots = data.screenshots || [];
+        const sessions = remoteData.sessions || {};
+        const sessionNames = Object.keys(sessions).sort();
 
-                // Build a map for quick lookup
-                const shotMap = {};
-                shots.forEach(s => { shotMap[s.timestamp] = s; });
+        // Render session buttons
+        renderSessionBar(sessionNames, sessions);
 
-                // Find new timestamps not yet rendered
-                const newShots = shots.filter(s => !renderedSet.has(s.timestamp));
-
-                // Sort new ones newest first
-                newShots.sort((a, b) => parseInt(b.timestamp) - parseInt(a.timestamp));
-
-                // Add new cards at the TOP of the gallery (newest first)
-                const gallery = document.getElementById('gallery');
-                newShots.forEach(shot => {
-                    renderedSet.add(shot.timestamp);
-                    const isNew = !seenPhotos[shot.timestamp];
-                    const card = createCard(shot, isNew, true);
-                    // Insert at the very beginning
-                    gallery.insertBefore(card, gallery.firstChild);
-                });
-
-                // Handle removals (if gallery was cleared from another device)
-                const remoteTimestamps = new Set(shots.map(s => s.timestamp));
-                const toRemove = [];
-                renderedSet.forEach(ts => {
-                    if (!remoteTimestamps.has(ts)) toRemove.push(ts);
-                });
-                toRemove.forEach(ts => {
-                    const el = document.getElementById('card-' + ts);
-                    if (el) el.remove();
-                    renderedSet.delete(ts);
-                });
-
-                // Update counts
-                document.getElementById('count').textContent = shots.length;
-                document.getElementById('empty').style.display = shots.length ? 'none' : 'block';
-                document.getElementById('btnClear').disabled = shots.length === 0;
-                updateNewCount();
-
-            } catch (e) {
-                console.log('Poll error:', e);
-            }
-
-            dot.classList.remove('poll');
-            label.textContent = 'Watching';
-        }
-
-        function createCard(shot, isNew, animate) {
-            const full = shot.url;
-            const thumb = full.replace('/upload/', '/upload/c_fit,w_640,q_auto/');
-            const ts = parseInt(shot.timestamp) || 0;
-            const time = ts ? new Date(ts * 1000).toLocaleString() : '';
-
-            const card = document.createElement('div');
-            card.className = 'card' + (isNew ? ' is-new' : '') + (animate ? ' fresh' : '');
-            card.id = 'card-' + shot.timestamp;
-            card.setAttribute('data-ts', shot.timestamp);
-
-            const newBadge = isNew ? `<div class="new-badge" id="badge-${shot.timestamp}">New</div>` : '';
-
-            card.innerHTML = `
-                ${newBadge}
-                <img src="${thumb}" alt="Screenshot" loading="lazy" onclick="viewPhoto('${full}', '${shot.timestamp}')">
-                <div class="card-footer">
-                    <span class="card-time">${time}</span>
-                    <div class="card-actions">
-                        <button class="btn-sm" onclick="viewPhoto('${full}', '${shot.timestamp}')">View</button>
-                        <button class="btn-sm" onclick="window.open('${full}','_blank')">Open</button>
-                    </div>
-                </div>`;
-            return card;
-        }
-
-        function viewPhoto(url, timestamp) {
-            seenPhotos[timestamp] = true;
-            saveSeen();
-
-            const badge = document.getElementById('badge-' + timestamp);
-            if (badge) badge.remove();
-            const card = document.getElementById('card-' + timestamp);
-            if (card) card.classList.remove('is-new');
-
-            updateNewCount();
-            openLb(url);
-        }
-
-        function updateNewCount() {
-            const count = document.querySelectorAll('.card.is-new').length;
-            const el = document.getElementById('newCount');
-            if (count > 0) {
-                el.innerHTML = `<strong>${count}</strong> new screenshot${count > 1 ? 's' : ''}`;
-            } else if (renderedSet.size > 0) {
-                el.textContent = 'All caught up';
+        // Auto-select first session if none active
+        if (!activeSession || !sessions[activeSession]) {
+            if (sessionNames.length > 0) {
+                selectSession(sessionNames[0]);
             } else {
-                el.textContent = '';
+                document.getElementById('sid').textContent = '—';
+                document.getElementById('count').textContent = '0';
+                document.getElementById('gallery').innerHTML = '';
+                document.getElementById('empty').style.display = 'block';
+                document.getElementById('btnDelete').disabled = true;
+                renderedSet.clear();
             }
+        } else {
+            renderPhotos(sessions[activeSession]);
         }
+    } catch (e) {
+        console.log('Poll error:', e);
+    }
 
-        // Clear Gallery
-        function showConfirm() { document.getElementById('confirmOverlay').classList.add('open'); }
-        function hideConfirm() { document.getElementById('confirmOverlay').classList.remove('open'); }
+    dot.classList.remove('poll');
+    label.textContent = 'Watching';
+}
 
-        async function clearGallery() {
-            const btn = document.getElementById('btnConfirmClear');
-            btn.textContent = 'Clearing...';
-            btn.disabled = true;
+function renderSessionBar(names, sessions) {
+    const bar = document.getElementById('sessionBar');
+    bar.innerHTML = '';
+    names.forEach(name => {
+        const btn = document.createElement('button');
+        btn.className = 'session-btn' + (name === activeSession ? ' active' : '');
+        const count = (sessions[name]?.screenshots || []).length;
+        btn.innerHTML = `${name}<span class="count">(${count})</span>`;
+        btn.onclick = () => selectSession(name);
+        bar.appendChild(btn);
+    });
+}
 
-            try {
-                const r = await fetch(`https://api.npoint.io/${NPOINT_BIN}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ screenshots: [], session: 'driveshot', updated: Math.floor(Date.now()/1000) })
-                });
+function selectSession(name) {
+    activeSession = name;
+    renderedSet.clear();
+    document.getElementById('gallery').innerHTML = '';
+    document.getElementById('sid').textContent = name;
+    document.getElementById('btnDelete').disabled = false;
 
-                if (r.ok) {
-                    document.getElementById('gallery').innerHTML = '';
-                    document.getElementById('count').textContent = '0';
-                    document.getElementById('empty').style.display = 'block';
-                    document.getElementById('newCount').textContent = '';
-                    document.getElementById('btnClear').disabled = true;
-                    renderedSet.clear();
-                    seenPhotos = {};
-                    saveSeen();
-                }
-            } catch (e) {
-                console.error('Clear error:', e);
-            }
+    // Re-render session buttons
+    const sessions = remoteData.sessions || {};
+    renderSessionBar(Object.keys(sessions).sort(), sessions);
 
-            btn.textContent = 'Clear All';
-            btn.disabled = false;
-            hideConfirm();
-        }
+    if (sessions[name]) {
+        renderPhotos(sessions[name]);
+    }
+}
 
-        function openLb(url) {
-            document.getElementById('lbImg').src = url;
-            document.getElementById('lb').classList.add('open');
-        }
-        function closeLb() { document.getElementById('lb').classList.remove('open'); }
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') { closeLb(); hideConfirm(); }
+function renderPhotos(sessionData) {
+    const shots = sessionData?.screenshots || [];
+    const gallery = document.getElementById('gallery');
+
+    // Sort newest first by timestamp (as numbers)
+    const sorted = [...shots].sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
+
+    // Find new photos not yet rendered
+    const newShots = sorted.filter(s => !renderedSet.has(s.timestamp));
+
+    // Add new cards at the top
+    newShots.forEach(shot => {
+        renderedSet.add(shot.timestamp);
+        const isNew = !seenPhotos[shot.timestamp];
+        const card = createCard(shot, isNew, true);
+        gallery.insertBefore(card, gallery.firstChild);
+    });
+
+    // Remove cards that no longer exist in data
+    const remoteTs = new Set(shots.map(s => s.timestamp));
+    const toRemove = [];
+    renderedSet.forEach(ts => { if (!remoteTs.has(ts)) toRemove.push(ts); });
+    toRemove.forEach(ts => {
+        const el = document.getElementById('card-' + ts);
+        if (el) el.remove();
+        renderedSet.delete(ts);
+    });
+
+    document.getElementById('count').textContent = shots.length;
+    document.getElementById('empty').style.display = shots.length ? 'none' : 'block';
+    updateNewCount();
+}
+
+function createCard(shot, isNew, animate) {
+    const full = shot.url;
+    const thumb = full.replace('/upload/', '/upload/c_fit,w_640,q_auto/');
+    const ts = Number(shot.timestamp) || 0;
+    const time = ts ? new Date(ts * 1000).toLocaleString() : '';
+
+    const card = document.createElement('div');
+    card.className = 'card' + (isNew ? ' is-new' : '') + (animate ? ' fresh' : '');
+    card.id = 'card-' + shot.timestamp;
+
+    const badge = isNew ? `<div class="new-badge" id="badge-${shot.timestamp}">New</div>` : '';
+    card.innerHTML = `${badge}
+        <img src="${thumb}" alt="Screenshot" loading="lazy" onclick="viewPhoto('${full}','${shot.timestamp}')">
+        <div class="card-footer">
+            <span class="card-time">${time}</span>
+            <div class="card-actions">
+                <button class="btn-sm" onclick="viewPhoto('${full}','${shot.timestamp}')">View</button>
+                <button class="btn-sm" onclick="window.open('${full}','_blank')">Open</button>
+            </div>
+        </div>`;
+    return card;
+}
+
+function viewPhoto(url, ts) {
+    seenPhotos[ts] = true;
+    saveSeen();
+    const b = document.getElementById('badge-' + ts);
+    if (b) b.remove();
+    const c = document.getElementById('card-' + ts);
+    if (c) c.classList.remove('is-new');
+    updateNewCount();
+    openLb(url);
+}
+
+function updateNewCount() {
+    const n = document.querySelectorAll('.card.is-new').length;
+    const el = document.getElementById('newCount');
+    if (n > 0) el.innerHTML = `<strong>${n}</strong> new`;
+    else if (renderedSet.size > 0) el.textContent = 'All caught up';
+    else el.textContent = '';
+}
+
+// Delete session
+function showDeleteDialog() {
+    document.getElementById('deleteError').style.display = 'none';
+    document.getElementById('adminPass').value = '';
+    document.getElementById('deleteOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('adminPass').focus(), 100);
+}
+function hideDeleteDialog() {
+    document.getElementById('deleteOverlay').classList.remove('open');
+}
+
+async function deleteSession() {
+    const pass = document.getElementById('adminPass').value;
+    const errEl = document.getElementById('deleteError');
+    const storedPass = remoteData.adminPassword || ADMIN_PASSWORD;
+
+    if (pass !== storedPass) {
+        errEl.textContent = 'Wrong password';
+        errEl.style.display = 'block';
+        return;
+    }
+
+    const btn = document.getElementById('btnConfirmDelete');
+    btn.textContent = 'Deleting...';
+    btn.disabled = true;
+
+    try {
+        const sessions = { ...(remoteData.sessions || {}) };
+        delete sessions[activeSession];
+
+        const updated = { sessions, adminPassword: storedPass };
+
+        const r = await fetch(`https://api.npoint.io/${NPOINT_BIN}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updated)
         });
 
-        init();
-    </script>
+        if (r.ok) {
+            remoteData = updated;
+            renderedSet.clear();
+            document.getElementById('gallery').innerHTML = '';
+
+            const remaining = Object.keys(sessions).sort();
+            if (remaining.length > 0) {
+                selectSession(remaining[0]);
+            } else {
+                activeSession = null;
+                document.getElementById('sid').textContent = '—';
+                document.getElementById('count').textContent = '0';
+                document.getElementById('empty').style.display = 'block';
+                document.getElementById('sessionBar').innerHTML = '';
+                document.getElementById('btnDelete').disabled = true;
+                document.getElementById('newCount').textContent = '';
+            }
+        }
+    } catch (e) {
+        errEl.textContent = 'Failed to delete';
+        errEl.style.display = 'block';
+    }
+
+    btn.textContent = 'Delete';
+    btn.disabled = false;
+    hideDeleteDialog();
+}
+
+function openLb(url) { document.getElementById('lbImg').src = url; document.getElementById('lb').classList.add('open'); }
+function closeLb() { document.getElementById('lb').classList.remove('open'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeLb(); hideDeleteDialog(); } });
+
+init();
+</script>
 </body>
 </html>
